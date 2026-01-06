@@ -12,3 +12,11 @@ C:\dev\secap.gob.ec\desktop\getDataSystem\getDataSystem\obj\Debug\net8.0\refint\
 C:\dev\secap.gob.ec\desktop\getDataSystem\getDataSystem\obj\Debug\net8.0\getDataSystem.pdb
 C:\dev\secap.gob.ec\desktop\getDataSystem\getDataSystem\obj\Debug\net8.0\getDataSystem.genruntimeconfig.cache
 C:\dev\secap.gob.ec\desktop\getDataSystem\getDataSystem\obj\Debug\net8.0\ref\getDataSystem.dll
+C:\dev\secap.gob.ec\desktop\getDataSystem\getDataSystem\obj\Debug\net8.0\getDataSystem.csproj.AssemblyReference.cache
+C:\dev\secap.gob.ec\desktop\getDataSystem\getDataSystem\obj\Debug\net8.0\getDataSystem.sourcelink.json
+C:\dev\secap.gob.ec\desktop\getDataSystem\getDataSystem\bin\Debug\net8.0\System.CodeDom.dll
+C:\dev\secap.gob.ec\desktop\getDataSystem\getDataSystem\bin\Debug\net8.0\System.DirectoryServices.dll
+C:\dev\secap.gob.ec\desktop\getDataSystem\getDataSystem\bin\Debug\net8.0\System.Management.dll
+C:\dev\secap.gob.ec\desktop\getDataSystem\getDataSystem\bin\Debug\net8.0\runtimes\win\lib\net8.0\System.DirectoryServices.dll
+C:\dev\secap.gob.ec\desktop\getDataSystem\getDataSystem\bin\Debug\net8.0\runtimes\win\lib\net8.0\System.Management.dll
+C:\dev\secap.gob.ec\desktop\getDataSystem\getDataSystem\obj\Debug\net8.0\getDataS.F1374F67.Up2Date

@@ -7,4 +7,9 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+        <PackageReference Include="System.DirectoryServices" Version="8.0.0" />
+        <PackageReference Include="System.Management" Version="8.0.0" />
+    </ItemGroup>
+
 </Project>
