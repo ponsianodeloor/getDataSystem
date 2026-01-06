@@ -1,0 +1,14 @@
+C:\dev\secap.gob.ec\desktop\getDataSystem\getDataSystem\bin\Debug\net8.0\getDataSystem.exe
+C:\dev\secap.gob.ec\desktop\getDataSystem\getDataSystem\bin\Debug\net8.0\getDataSystem.deps.json
+C:\dev\secap.gob.ec\desktop\getDataSystem\getDataSystem\bin\Debug\net8.0\getDataSystem.runtimeconfig.json
+C:\dev\secap.gob.ec\desktop\getDataSystem\getDataSystem\bin\Debug\net8.0\getDataSystem.dll
+C:\dev\secap.gob.ec\desktop\getDataSystem\getDataSystem\bin\Debug\net8.0\getDataSystem.pdb
+C:\dev\secap.gob.ec\desktop\getDataSystem\getDataSystem\obj\Debug\net8.0\getDataSystem.GeneratedMSBuildEditorConfig.editorconfig
+C:\dev\secap.gob.ec\desktop\getDataSystem\getDataSystem\obj\Debug\net8.0\getDataSystem.AssemblyInfoInputs.cache
+C:\dev\secap.gob.ec\desktop\getDataSystem\getDataSystem\obj\Debug\net8.0\getDataSystem.AssemblyInfo.cs
+C:\dev\secap.gob.ec\desktop\getDataSystem\getDataSystem\obj\Debug\net8.0\getDataSystem.csproj.CoreCompileInputs.cache
+C:\dev\secap.gob.ec\desktop\getDataSystem\getDataSystem\obj\Debug\net8.0\getDataSystem.dll
+C:\dev\secap.gob.ec\desktop\getDataSystem\getDataSystem\obj\Debug\net8.0\refint\getDataSystem.dll
+C:\dev\secap.gob.ec\desktop\getDataSystem\getDataSystem\obj\Debug\net8.0\getDataSystem.pdb
+C:\dev\secap.gob.ec\desktop\getDataSystem\getDataSystem\obj\Debug\net8.0\getDataSystem.genruntimeconfig.cache
+C:\dev\secap.gob.ec\desktop\getDataSystem\getDataSystem\obj\Debug\net8.0\ref\getDataSystem.dll
