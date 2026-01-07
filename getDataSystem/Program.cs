@@ -1,57 +1,32 @@
 using System.DirectoryServices;
+using System.Drawing;
 using System.Management;
 using System.Net.NetworkInformation;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Windows.Forms;
 
 internal sealed class Program
 {
-    private const string EndpointEnvVar = "GETDATASYSTEM_ENDPOINT";
+    internal const string EndpointEnvVar = "GETDATASYSTEM_ENDPOINT";
 
-    private static readonly JsonSerializerOptions JsonOptions = new()
+    internal static readonly JsonSerializerOptions JsonOptions = new()
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
         WriteIndented = false,
     };
 
-    private static async Task<int> Main(string[] args)
+    [STAThread]
+    private static void Main(string[] args)
     {
-        var endpoint = GetEndpoint(args);
-        var report = BuildReport();
-        var json = JsonSerializer.Serialize(report, JsonOptions);
-
-        Console.WriteLine(json);
-
-        if (string.IsNullOrWhiteSpace(endpoint))
-        {
-            Console.Error.WriteLine($"Endpoint not set. Use --endpoint or {EndpointEnvVar}.");
-            return 1;
-        }
-
-        using var client = new HttpClient();
-        using var content = new StringContent(json, Encoding.UTF8, "application/json");
-        try
-        {
-            using var response = await client.PostAsync(endpoint, content);
-            if (!response.IsSuccessStatusCode)
-            {
-                Console.Error.WriteLine($"POST failed: {(int)response.StatusCode} {response.ReasonPhrase}");
-                return 2;
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.Error.WriteLine($"POST failed: {ex.Message}");
-            return 3;
-        }
-
-        return 0;
+        ApplicationConfiguration.Initialize();
+        Application.Run(new MainForm(args));
     }
 
-    private static SystemReport BuildReport()
+    internal static SystemReport BuildReport()
     {
         var errors = new List<CollectionError>();
 
@@ -90,7 +65,7 @@ internal sealed class Program
         };
     }
 
-    private static string? GetEndpoint(string[] args)
+    internal static string? GetEndpoint(string[] args)
     {
         for (var i = 0; i < args.Length; i++)
         {
@@ -674,6 +649,100 @@ internal sealed class Program
         {
             return null;
         }
+    }
+}
+
+internal sealed class MainForm : Form
+{
+    private readonly Label _statusLabel;
+    private readonly TextBox _jsonTextBox;
+    private readonly string? _endpoint;
+
+    public MainForm(string[] args)
+    {
+        _endpoint = Program.GetEndpoint(args);
+
+        Text = "getDataSystem";
+        StartPosition = FormStartPosition.CenterScreen;
+        MinimumSize = new Size(720, 480);
+
+        _statusLabel = new Label
+        {
+            AutoSize = true,
+            Text = "Preparando..."
+        };
+
+        _jsonTextBox = new TextBox
+        {
+            Multiline = true,
+            ReadOnly = true,
+            ScrollBars = ScrollBars.Both,
+            WordWrap = false,
+            Font = new Font(FontFamily.GenericMonospace, 9f),
+            Dock = DockStyle.Fill
+        };
+
+        var layout = new TableLayoutPanel
+        {
+            Dock = DockStyle.Fill,
+            ColumnCount = 1,
+            RowCount = 2,
+            Padding = new Padding(12)
+        };
+        layout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        layout.RowStyles.Add(new RowStyle(SizeType.Percent, 100f));
+        layout.Controls.Add(_statusLabel, 0, 0);
+        layout.Controls.Add(_jsonTextBox, 0, 1);
+
+        Controls.Add(layout);
+
+        Shown += async (_, __) => await LoadReportAsync();
+    }
+
+    private async Task LoadReportAsync()
+    {
+        _statusLabel.Text = "Recolectando...";
+
+        SystemReport report;
+        try
+        {
+            report = await Task.Run(Program.BuildReport);
+        }
+        catch (Exception ex)
+        {
+            _statusLabel.Text = $"Error: {ex.Message}";
+            return;
+        }
+
+        var json = JsonSerializer.Serialize(report, Program.JsonOptions);
+        _jsonTextBox.Text = json;
+
+        if (string.IsNullOrWhiteSpace(_endpoint))
+        {
+            _statusLabel.Text = $"Endpoint no configurado. Use --endpoint o {Program.EndpointEnvVar}.";
+            return;
+        }
+
+        _statusLabel.Text = "Enviando...";
+
+        using var client = new HttpClient();
+        using var content = new StringContent(json, Encoding.UTF8, "application/json");
+        try
+        {
+            using var response = await client.PostAsync(_endpoint, content);
+            if (!response.IsSuccessStatusCode)
+            {
+                _statusLabel.Text = $"POST failed: {(int)response.StatusCode} {response.ReasonPhrase}";
+                return;
+            }
+        }
+        catch (Exception ex)
+        {
+            _statusLabel.Text = $"POST failed: {ex.Message}";
+            return;
+        }
+
+        _statusLabel.Text = "Todo correcto";
     }
 }
 
