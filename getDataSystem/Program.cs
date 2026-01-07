@@ -1,7 +1,9 @@
 using System.DirectoryServices;
 using System.Drawing;
 using System.Management;
+using System.Net;
 using System.Net.NetworkInformation;
+using System.Net.Sockets;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
@@ -18,6 +20,8 @@ internal sealed class Program
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
         WriteIndented = false,
     };
+
+    private const double BytesPerGb = 1024d * 1024d * 1024d;
 
     [STAThread]
     private static void Main(string[] args)
@@ -300,12 +304,22 @@ internal sealed class Program
 
         return new MemoryInfo
         {
-            TotalPhysicalBytes = totalPhysicalBytes,
-            TotalVisibleBytes = totalVisibleBytes,
-            FreePhysicalBytes = freeBytes,
-            UsedPhysicalBytes = usedBytes,
+            TotalPhysicalGb = BytesToGb(totalPhysicalBytes),
+            TotalVisibleGb = BytesToGb(totalVisibleBytes),
+            FreePhysicalGb = BytesToGb(freeBytes),
+            UsedPhysicalGb = BytesToGb(usedBytes),
             UsedPercent = usedPercent,
         };
+    }
+
+    private static double? BytesToGb(ulong? bytes)
+    {
+        if (!bytes.HasValue)
+        {
+            return null;
+        }
+
+        return Math.Round(bytes.Value / BytesPerGb, 2);
     }
 
     private static List<PhysicalDiskInfo> GetPhysicalDisks(List<CollectionError> errors)
@@ -330,7 +344,7 @@ internal sealed class Program
                     DeviceId = GetString(mo, "DeviceID"),
                     Model = model,
                     SerialNumber = GetString(mo, "SerialNumber")?.Trim(),
-                    SizeBytes = GetUInt64(mo, "Size"),
+                    SizeGb = BytesToGb(GetUInt64(mo, "Size")),
                     InterfaceType = interfaceType,
                     MediaType = mediaType,
                     PnpDeviceId = pnpId,
@@ -362,7 +376,7 @@ internal sealed class Program
                     DeviceId = GetString(mo, "DeviceID"),
                     DiskIndex = GetInt32(mo, "DiskIndex"),
                     Index = GetInt32(mo, "Index"),
-                    SizeBytes = GetUInt64(mo, "Size"),
+                    SizeGb = BytesToGb(GetUInt64(mo, "Size")),
                     Type = GetString(mo, "Type"),
                     Bootable = GetBool(mo, "Bootable"),
                     PrimaryPartition = GetBool(mo, "PrimaryPartition"),
@@ -400,8 +414,8 @@ internal sealed class Program
                 {
                     DeviceId = GetString(mo, "DeviceID"),
                     FileSystem = GetString(mo, "FileSystem"),
-                    SizeBytes = sizeBytes,
-                    FreeBytes = freeBytes,
+                    SizeGb = BytesToGb(sizeBytes),
+                    FreeGb = BytesToGb(freeBytes),
                     UsedPercent = usedPercent,
                     DriveType = GetUInt32(mo, "DriveType"),
                     VolumeName = GetString(mo, "VolumeName"),
@@ -431,24 +445,21 @@ internal sealed class Program
 
                 var ipAddresses = ni.GetIPProperties()
                     .UnicastAddresses
-                    .Select(address => address.Address.ToString())
+                    .Select(address => address.Address)
+                    .Where(address => address.AddressFamily == AddressFamily.InterNetwork)
+                    .Select(NormalizeIpAddress)
                     .Where(address => !string.IsNullOrWhiteSpace(address))
                     .ToArray();
-                var macAddress = ni.GetPhysicalAddress()?.ToString();
 
-                if (ipAddresses.Length == 0 && string.IsNullOrWhiteSpace(macAddress))
+                if (ipAddresses.Length == 0)
                 {
                     continue;
                 }
 
                 interfaces.Add(new NetworkInterfaceInfo
                 {
-                    Name = ni.Name,
-                    Description = ni.Description,
-                    Type = ni.NetworkInterfaceType.ToString(),
-                    Status = ni.OperationalStatus.ToString(),
-                    Speed = ni.Speed > 0 ? ni.Speed : null,
-                    MacAddress = string.IsNullOrWhiteSpace(macAddress) ? null : macAddress,
+                    Type = GetNetworkType(ni),
+                    VirtualMachine = IsVirtualAdapter(ni),
                     IpAddresses = ipAddresses,
                 });
             }
@@ -622,6 +633,64 @@ internal sealed class Program
     private static string? GetString(ManagementBaseObject obj, string propertyName)
         => obj[propertyName]?.ToString();
 
+    private static string? NormalizeIpAddress(IPAddress? address)
+    {
+        if (address == null)
+        {
+            return null;
+        }
+
+        var text = address.ToString();
+        var percentIndex = text.IndexOf('%');
+        return percentIndex > 0 ? text.Substring(0, percentIndex) : text;
+    }
+
+    private static string GetNetworkType(NetworkInterface ni)
+    {
+        return ni.NetworkInterfaceType == NetworkInterfaceType.Wireless80211 ? "wifi" : "local";
+    }
+
+    private static bool IsVirtualAdapter(NetworkInterface ni)
+    {
+        var text = $"{ni.Description} {ni.Name}";
+        return ContainsAny(text, new[]
+        {
+            "virtual",
+            "vmware",
+            "virtualbox",
+            "vbox",
+            "hyper-v",
+            "hyperv",
+            "vmswitch",
+            "vethernet",
+            "virtio",
+            "kvm",
+            "xen",
+            "qemu",
+            "parallels",
+            "vmbus",
+            "vmnet"
+        });
+    }
+
+    private static bool ContainsAny(string? text, string[] markers)
+    {
+        if (string.IsNullOrWhiteSpace(text))
+        {
+            return false;
+        }
+
+        foreach (var marker in markers)
+        {
+            if (text.IndexOf(marker, StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private static uint? GetUInt32(ManagementBaseObject obj, string propertyName)
         => TryConvert(obj[propertyName], Convert.ToUInt32);
 
@@ -790,10 +859,10 @@ internal sealed class CpuInfo
 
 internal sealed class MemoryInfo
 {
-    public ulong? TotalPhysicalBytes { get; init; }
-    public ulong? TotalVisibleBytes { get; init; }
-    public ulong? FreePhysicalBytes { get; init; }
-    public ulong? UsedPhysicalBytes { get; init; }
+    public double? TotalPhysicalGb { get; init; }
+    public double? TotalVisibleGb { get; init; }
+    public double? FreePhysicalGb { get; init; }
+    public double? UsedPhysicalGb { get; init; }
     public double? UsedPercent { get; init; }
 }
 
@@ -810,7 +879,7 @@ internal sealed class PhysicalDiskInfo
     public string? DeviceId { get; init; }
     public string? Model { get; init; }
     public string? SerialNumber { get; init; }
-    public ulong? SizeBytes { get; init; }
+    public double? SizeGb { get; init; }
     public string? InterfaceType { get; init; }
     public string? MediaType { get; init; }
     public string? PnpDeviceId { get; init; }
@@ -822,7 +891,7 @@ internal sealed class PartitionInfo
     public string? DeviceId { get; init; }
     public int? DiskIndex { get; init; }
     public int? Index { get; init; }
-    public ulong? SizeBytes { get; init; }
+    public double? SizeGb { get; init; }
     public string? Type { get; init; }
     public bool? Bootable { get; init; }
     public bool? PrimaryPartition { get; init; }
@@ -832,8 +901,8 @@ internal sealed class LogicalDiskInfo
 {
     public string? DeviceId { get; init; }
     public string? FileSystem { get; init; }
-    public ulong? SizeBytes { get; init; }
-    public ulong? FreeBytes { get; init; }
+    public double? SizeGb { get; init; }
+    public double? FreeGb { get; init; }
     public double? UsedPercent { get; init; }
     public uint? DriveType { get; init; }
     public string? VolumeName { get; init; }
@@ -841,12 +910,8 @@ internal sealed class LogicalDiskInfo
 
 internal sealed class NetworkInterfaceInfo
 {
-    public string? Name { get; init; }
-    public string? Description { get; init; }
-    public string? Type { get; init; }
-    public string? Status { get; init; }
-    public long? Speed { get; init; }
-    public string? MacAddress { get; init; }
+    public string Type { get; init; } = "local";
+    public bool VirtualMachine { get; init; }
     public string[] IpAddresses { get; init; } = Array.Empty<string>();
 }
 

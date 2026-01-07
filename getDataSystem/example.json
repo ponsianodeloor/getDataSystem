@@ -1,0 +1,157 @@
+﻿{
+  "deviceId": "87a0d22616142c87db19e5df420942f26dfbcbf1e1f61e7b598695b510c41ddf",
+  "collectedAt": "2026-01-07T20:51:30.5912003+00:00",
+  "hostname": "DEVSECOPS-PDELO",
+  "user": {
+    "userName": "Ponsiano De Loor",
+    "userDomain": "DEVSECOPS-PDELO"
+  },
+  "ad": {
+    "status": "not_available",
+    "source": "ldap",
+    "message": "El dominio especificado no existe o no se pudo poner en contacto con \u00E9l."
+  },
+  "cpu": [
+    {
+      "name": "AMD Ryzen 7 6800H with Radeon Graphics         ",
+      "manufacturer": "AuthenticAMD",
+      "processorId": "178BFBFF00A40F41",
+      "numberOfCores": 8,
+      "numberOfLogicalProcessors": 16,
+      "maxClockSpeedMHz": 3201
+    }
+  ],
+  "memory": {
+    "totalPhysicalGb": 63.26,
+    "totalVisibleGb": 63.26,
+    "freePhysicalGb": 26.44,
+    "usedPhysicalGb": 36.83,
+    "usedPercent": 58.21
+  },
+  "disks": {
+    "physical": [
+      {
+        "index": 0,
+        "deviceId": "\\\\.\\PHYSICALDRIVE0",
+        "model": "Samsung SSD 990 PRO 2TB",
+        "serialNumber": "0025_3844_41A1_88A6.",
+        "sizeGb": 1863.01,
+        "interfaceType": "SCSI",
+        "mediaType": "Fixed hard disk media",
+        "pnpDeviceId": "SCSI\\DISK\u0026VEN_NVME\u0026PROD_SAMSUNG_SSD_990\\5\u00262747E03F\u00260\u0026000000",
+        "driveType": "SSD"
+      }
+    ],
+    "partitions": [
+      {
+        "deviceId": "Disk #0, Partition #0",
+        "diskIndex": 0,
+        "index": 0,
+        "sizeGb": 0.25,
+        "type": "GPT: System",
+        "bootable": true,
+        "primaryPartition": true
+      },
+      {
+        "deviceId": "Disk #0, Partition #1",
+        "diskIndex": 0,
+        "index": 1,
+        "sizeGb": 1862.74,
+        "type": "GPT: Basic Data",
+        "bootable": false,
+        "primaryPartition": true
+      }
+    ],
+    "logical": [
+      {
+        "deviceId": "C:",
+        "fileSystem": "NTFS",
+        "sizeGb": 1862.74,
+        "freeGb": 811.12,
+        "usedPercent": 56.46,
+        "driveType": 3,
+        "volumeName": "OS"
+      },
+      {
+        "deviceId": "D:",
+        "driveType": 5
+      }
+    ]
+  },
+  "networkInterfaces": [
+    {
+      "type": "local",
+      "virtualMachine": true,
+      "ipAddresses": [
+        "192.168.56.1"
+      ]
+    },
+    {
+      "type": "wifi",
+      "virtualMachine": true,
+      "ipAddresses": [
+        "169.254.72.184"
+      ]
+    },
+    {
+      "type": "wifi",
+      "virtualMachine": true,
+      "ipAddresses": [
+        "169.254.192.175"
+      ]
+    },
+    {
+      "type": "local",
+      "virtualMachine": false,
+      "ipAddresses": [
+        "192.168.2.38"
+      ]
+    },
+    {
+      "type": "local",
+      "virtualMachine": true,
+      "ipAddresses": [
+        "192.168.40.1"
+      ]
+    },
+    {
+      "type": "local",
+      "virtualMachine": true,
+      "ipAddresses": [
+        "192.168.179.1"
+      ]
+    },
+    {
+      "type": "wifi",
+      "virtualMachine": false,
+      "ipAddresses": [
+        "169.254.207.238"
+      ]
+    },
+    {
+      "type": "local",
+      "virtualMachine": false,
+      "ipAddresses": [
+        "169.254.12.127"
+      ]
+    },
+    {
+      "type": "local",
+      "virtualMachine": true,
+      "ipAddresses": [
+        "172.20.128.1"
+      ]
+    },
+    {
+      "type": "local",
+      "virtualMachine": true,
+      "ipAddresses": [
+        "172.23.176.1"
+      ]
+    }
+  ],
+  "smartHealth": {
+    "status": "No disponible",
+    "message": "Incompatible "
+  }
+}
