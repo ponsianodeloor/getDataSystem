@@ -51,7 +51,6 @@ internal sealed class Program
             Logical = GetLogicalDisks(errors).ToArray(),
         };
         var networkInterfaces = GetNetworkInterfaces(errors);
-        var smartHealth = GetSmartHealth();
 
         return new SystemReport
         {
@@ -64,7 +63,6 @@ internal sealed class Program
             Memory = memory,
             Disks = disks,
             NetworkInterfaces = networkInterfaces.ToArray(),
-            SmartHealth = smartHealth,
             Errors = errors.Count > 0 ? errors.ToArray() : null,
         };
     }
@@ -472,67 +470,6 @@ internal sealed class Program
         return interfaces;
     }
 
-    private static SmartHealthInfo GetSmartHealth()
-    {
-        try
-        {
-            using var searcher = new ManagementObjectSearcher(
-                "root\\WMI",
-                "SELECT InstanceName, PredictFailure FROM MSStorageDriver_FailurePredictStatus");
-            using var results = searcher.Get();
-            var devices = new List<SmartDiskStatus>();
-            var anyPredFail = false;
-
-            foreach (ManagementObject mo in results)
-            {
-                var predictFailure = GetBool(mo, "PredictFailure");
-                var status = predictFailure == true ? "Pred Fail" : "OK";
-                if (predictFailure == true)
-                {
-                    anyPredFail = true;
-                }
-
-                devices.Add(new SmartDiskStatus
-                {
-                    InstanceName = GetString(mo, "InstanceName"),
-                    PredictFailure = predictFailure,
-                    Status = status,
-                });
-            }
-
-            if (devices.Count == 0)
-            {
-                return new SmartHealthInfo
-                {
-                    Status = "No disponible",
-                    Message = "Driver no expone SMART.",
-                };
-            }
-
-            return new SmartHealthInfo
-            {
-                Status = anyPredFail ? "Pred Fail" : "OK",
-                Devices = devices.ToArray(),
-            };
-        }
-        catch (UnauthorizedAccessException)
-        {
-            return new SmartHealthInfo
-            {
-                Status = "No disponible",
-                Message = "Sin permisos.",
-            };
-        }
-        catch (Exception ex)
-        {
-            return new SmartHealthInfo
-            {
-                Status = "No disponible",
-                Message = ex.Message,
-            };
-        }
-    }
-
     private static string EscapeLdapFilterValue(string value)
     {
         var sb = new StringBuilder();
@@ -826,7 +763,6 @@ internal sealed class SystemReport
     public MemoryInfo Memory { get; init; } = new();
     public DiskInfo Disks { get; init; } = new();
     public NetworkInterfaceInfo[] NetworkInterfaces { get; init; } = Array.Empty<NetworkInterfaceInfo>();
-    public SmartHealthInfo SmartHealth { get; init; } = new();
     public CollectionError[]? Errors { get; init; }
 }
 
@@ -913,20 +849,6 @@ internal sealed class NetworkInterfaceInfo
     public string Type { get; init; } = "local";
     public bool VirtualMachine { get; init; }
     public string[] IpAddresses { get; init; } = Array.Empty<string>();
-}
-
-internal sealed class SmartHealthInfo
-{
-    public string Status { get; init; } = "No disponible";
-    public string? Message { get; init; }
-    public SmartDiskStatus[]? Devices { get; init; }
-}
-
-internal sealed class SmartDiskStatus
-{
-    public string? InstanceName { get; init; }
-    public bool? PredictFailure { get; init; }
-    public string? Status { get; init; }
 }
 
 internal sealed class CollectionError

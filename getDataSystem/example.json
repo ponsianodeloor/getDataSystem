@@ -1,6 +1,6 @@
 ﻿{
   "deviceId": "87a0d22616142c87db19e5df420942f26dfbcbf1e1f61e7b598695b510c41ddf",
-  "collectedAt": "2026-01-07T20:51:30.5912003+00:00",
+  "collectedAt": "2026-01-07T20:56:49.9671489+00:00",
   "hostname": "DEVSECOPS-PDELO",
   "user": {
     "userName": "Ponsiano De Loor",
@@ -24,9 +24,9 @@
   "memory": {
     "totalPhysicalGb": 63.26,
     "totalVisibleGb": 63.26,
-    "freePhysicalGb": 26.44,
-    "usedPhysicalGb": 36.83,
-    "usedPercent": 58.21
+    "freePhysicalGb": 25.98,
+    "usedPhysicalGb": 37.28,
+    "usedPercent": 58.94
   },
   "disks": {
     "physical": [
@@ -67,8 +67,8 @@
         "deviceId": "C:",
         "fileSystem": "NTFS",
         "sizeGb": 1862.74,
-        "freeGb": 811.12,
-        "usedPercent": 56.46,
+        "freeGb": 810.59,
+        "usedPercent": 56.48,
         "driveType": 3,
         "volumeName": "OS"
       },
@@ -149,9 +149,5 @@
         "172.23.176.1"
       ]
     }
-  ],
-  "smartHealth": {
-    "status": "No disponible",
-    "message": "Incompatible "
-  }
+  ]
 }
