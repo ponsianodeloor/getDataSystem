@@ -1,5 +1,5 @@
 using System.DirectoryServices;
-using System.Drawing;
+using System.Globalization;
 using System.Management;
 using System.Net;
 using System.Net.NetworkInformation;
@@ -8,7 +8,6 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Windows.Forms;
 
 internal sealed class Program
 {
@@ -19,6 +18,7 @@ internal sealed class Program
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
         WriteIndented = false,
+        Converters = { new DateTimeOffsetJsonConverter() },
     };
 
     private const double BytesPerGb = 1024d * 1024d * 1024d;
@@ -658,6 +658,40 @@ internal sealed class Program
     }
 }
 
+internal sealed class DateTimeOffsetJsonConverter : JsonConverter<DateTimeOffset>
+{
+    private const string Format = "yyyy-MM-dd HH:mm:ss";
+
+    public override DateTimeOffset Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+        var text = reader.GetString();
+        if (string.IsNullOrWhiteSpace(text))
+        {
+            return default;
+        }
+
+        if (DateTimeOffset.TryParseExact(
+                text,
+                Format,
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal,
+                out var parsed))
+        {
+            return parsed;
+        }
+
+        return DateTimeOffset.Parse(
+            text,
+            CultureInfo.InvariantCulture,
+            DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal);
+    }
+
+    public override void Write(Utf8JsonWriter writer, DateTimeOffset value, JsonSerializerOptions options)
+    {
+        writer.WriteStringValue(value.UtcDateTime.ToString(Format, CultureInfo.InvariantCulture));
+    }
+}
+
 internal sealed class MainForm : Form
 {
     private readonly Label _statusLabel;
@@ -668,7 +702,7 @@ internal sealed class MainForm : Form
     {
         _endpoint = Program.GetEndpoint(args);
 
-        Text = "getDataSystem";
+        Text = "Obtener datos del sistema - getDataSystem - Secap";
         StartPosition = FormStartPosition.CenterScreen;
         MinimumSize = new Size(720, 480);
 
