@@ -458,6 +458,7 @@ internal sealed class Program
                 {
                     Type = GetNetworkType(ni),
                     VirtualMachine = IsVirtualAdapter(ni),
+                    MacAddress = FormatMacAddress(ni.GetPhysicalAddress()),
                     IpAddresses = ipAddresses,
                 });
             }
@@ -580,6 +581,23 @@ internal sealed class Program
         var text = address.ToString();
         var percentIndex = text.IndexOf('%');
         return percentIndex > 0 ? text.Substring(0, percentIndex) : text;
+    }
+
+    private static string? FormatMacAddress(PhysicalAddress? address)
+    {
+        if (address == null)
+        {
+            return null;
+        }
+
+        var bytes = address.GetAddressBytes();
+        if (bytes.Length == 0)
+        {
+            return null;
+        }
+
+        return string.Join(":", bytes.Select(b => b.ToString("X2", CultureInfo.InvariantCulture)))
+            .ToLowerInvariant();
     }
 
     private static string GetNetworkType(NetworkInterface ni)
@@ -882,6 +900,7 @@ internal sealed class NetworkInterfaceInfo
 {
     public string Type { get; init; } = "local";
     public bool VirtualMachine { get; init; }
+    public string? MacAddress { get; init; }
     public string[] IpAddresses { get; init; } = Array.Empty<string>();
 }
 

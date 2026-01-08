@@ -1,6 +1,6 @@
 ﻿{
   "deviceId": "87a0d22616142c87db19e5df420942f26dfbcbf1e1f61e7b598695b510c41ddf",
-  "collectedAt": "2026-01-07 21:01:24",
+  "collectedAt": "2026-01-08 15:46:17",
   "hostname": "DEVSECOPS-PDELO",
   "user": {
     "userName": "Ponsiano De Loor",
@@ -24,9 +24,9 @@
   "memory": {
     "totalPhysicalGb": 63.26,
     "totalVisibleGb": 63.26,
-    "freePhysicalGb": 25.94,
-    "usedPhysicalGb": 37.32,
-    "usedPercent": 58.99
+    "freePhysicalGb": 27.79,
+    "usedPhysicalGb": 35.47,
+    "usedPercent": 56.07
   },
   "disks": {
     "physical": [
@@ -67,8 +67,8 @@
         "deviceId": "C:",
         "fileSystem": "NTFS",
         "sizeGb": 1862.74,
-        "freeGb": 810.58,
-        "usedPercent": 56.48,
+        "freeGb": 803.57,
+        "usedPercent": 56.86,
         "driveType": 3,
         "volumeName": "OS"
       },
@@ -82,6 +82,7 @@
     {
       "type": "local",
       "virtualMachine": true,
+      "macAddress": "0a:00:27:00:00:0c",
       "ipAddresses": [
         "192.168.56.1"
       ]
@@ -89,6 +90,7 @@
     {
       "type": "wifi",
       "virtualMachine": true,
+      "macAddress": "4e:d5:77:eb:3f:51",
       "ipAddresses": [
         "169.254.72.184"
       ]
@@ -96,6 +98,7 @@
     {
       "type": "wifi",
       "virtualMachine": true,
+      "macAddress": "4e:d5:77:eb:2f:41",
       "ipAddresses": [
         "169.254.192.175"
       ]
@@ -103,6 +106,7 @@
     {
       "type": "local",
       "virtualMachine": false,
+      "macAddress": "50:eb:f6:d3:6c:f6",
       "ipAddresses": [
         "192.168.2.38"
       ]
@@ -110,6 +114,7 @@
     {
       "type": "local",
       "virtualMachine": true,
+      "macAddress": "00:50:56:c0:00:01",
       "ipAddresses": [
         "192.168.40.1"
       ]
@@ -117,6 +122,7 @@
     {
       "type": "local",
       "virtualMachine": true,
+      "macAddress": "00:50:56:c0:00:08",
       "ipAddresses": [
         "192.168.179.1"
       ]
@@ -124,13 +130,15 @@
     {
       "type": "wifi",
       "virtualMachine": false,
+      "macAddress": "4c:d5:77:eb:1f:71",
       "ipAddresses": [
-        "169.254.207.238"
+        "10.140.80.19"
       ]
     },
     {
       "type": "local",
       "virtualMachine": false,
+      "macAddress": "4c:d5:77:eb:1f:72",
       "ipAddresses": [
         "169.254.12.127"
       ]
@@ -138,6 +146,7 @@
     {
       "type": "local",
       "virtualMachine": true,
+      "macAddress": "00:15:5d:ca:52:50",
       "ipAddresses": [
         "172.20.128.1"
       ]
@@ -145,6 +154,7 @@
     {
       "type": "local",
       "virtualMachine": true,
+      "macAddress": "00:15:5d:d9:3d:1d",
       "ipAddresses": [
         "172.23.176.1"
       ]
