@@ -333,20 +333,17 @@ internal sealed class Program
             {
                 var model = GetString(mo, "Model");
                 var mediaType = GetString(mo, "MediaType");
-                var pnpId = GetString(mo, "PNPDeviceID");
                 var interfaceType = GetString(mo, "InterfaceType");
 
                 disks.Add(new PhysicalDiskInfo
                 {
                     Index = GetInt32(mo, "Index"),
-                    DeviceId = GetString(mo, "DeviceID"),
                     Model = model,
                     SerialNumber = GetString(mo, "SerialNumber")?.Trim(),
                     SizeGb = BytesToGb(GetUInt64(mo, "Size")),
                     InterfaceType = interfaceType,
                     MediaType = mediaType,
-                    PnpDeviceId = pnpId,
-                    DriveType = InferDriveType(mediaType, model, pnpId, interfaceType),
+                    DriveType = InferDriveType(mediaType, model, GetString(mo, "PNPDeviceID"), interfaceType),
                 });
             }
         }
@@ -864,13 +861,11 @@ internal sealed class DiskInfo
 internal sealed class PhysicalDiskInfo
 {
     public int? Index { get; init; }
-    public string? DeviceId { get; init; }
     public string? Model { get; init; }
     public string? SerialNumber { get; init; }
     public double? SizeGb { get; init; }
     public string? InterfaceType { get; init; }
     public string? MediaType { get; init; }
-    public string? PnpDeviceId { get; init; }
     public string? DriveType { get; init; }
 }
 

@@ -1,6 +1,6 @@
 ﻿{
   "deviceId": "87a0d22616142c87db19e5df420942f26dfbcbf1e1f61e7b598695b510c41ddf",
-  "collectedAt": "2026-01-08 15:46:17",
+  "collectedAt": "2026-01-09 20:30:18",
   "hostname": "DEVSECOPS-PDELO",
   "user": {
     "userName": "Ponsiano De Loor",
@@ -24,21 +24,19 @@
   "memory": {
     "totalPhysicalGb": 63.26,
     "totalVisibleGb": 63.26,
-    "freePhysicalGb": 27.79,
-    "usedPhysicalGb": 35.47,
-    "usedPercent": 56.07
+    "freePhysicalGb": 29.33,
+    "usedPhysicalGb": 33.94,
+    "usedPercent": 53.64
   },
   "disks": {
     "physical": [
       {
         "index": 0,
-        "deviceId": "\\\\.\\PHYSICALDRIVE0",
         "model": "Samsung SSD 990 PRO 2TB",
         "serialNumber": "0025_3844_41A1_88A6.",
         "sizeGb": 1863.01,
         "interfaceType": "SCSI",
         "mediaType": "Fixed hard disk media",
-        "pnpDeviceId": "SCSI\\DISK\u0026VEN_NVME\u0026PROD_SAMSUNG_SSD_990\\5\u00262747E03F\u00260\u0026000000",
         "driveType": "SSD"
       }
     ],
@@ -67,8 +65,8 @@
         "deviceId": "C:",
         "fileSystem": "NTFS",
         "sizeGb": 1862.74,
-        "freeGb": 803.57,
-        "usedPercent": 56.86,
+        "freeGb": 804.82,
+        "usedPercent": 56.79,
         "driveType": 3,
         "volumeName": "OS"
       },
@@ -128,19 +126,19 @@
       ]
     },
     {
-      "type": "wifi",
-      "virtualMachine": false,
-      "macAddress": "4c:d5:77:eb:1f:71",
-      "ipAddresses": [
-        "10.140.80.19"
-      ]
-    },
-    {
       "type": "local",
       "virtualMachine": false,
       "macAddress": "4c:d5:77:eb:1f:72",
       "ipAddresses": [
         "169.254.12.127"
+      ]
+    },
+    {
+      "type": "wifi",
+      "virtualMachine": false,
+      "macAddress": "4c:d5:77:eb:1f:71",
+      "ipAddresses": [
+        "10.122.161.19"
       ]
     },
     {
